@@ -1,0 +1,19 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/pavlovkeith/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/pavlovkeith/frontend-project-12/actions)",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build",
+    "start": "npx start-server -s ./frontend/dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hexlet/chat-server": "^2.0.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "vite": "^5.4.11"
+  }
+}
