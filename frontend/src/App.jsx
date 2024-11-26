@@ -1,17 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import Login from './components/Login';
-import NotFound from './components/NotFound';
+import { Routes, Route } from 'react-router-dom';
+import LoginPage from './components/LoginPage';
+import NotFoundPage from './components/NotFoundPage';
 
 const App = () => (
-  <Router>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </Router>
+  <Routes>
+    <Route path='/' element={<div>Главная страница</div>} />
+    <Route path='/login' element={<LoginPage />} />
+    <Route path='*' element={<NotFoundPage />} />
+  </Routes>
 );
 
 export default App;
