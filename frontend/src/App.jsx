@@ -10,51 +10,30 @@ import {
 } from 'react-router-dom';
 import { Button, Navbar } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-// import { toast, ToastContainer } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-
-// import axios from 'axios';
+import { logOut } from './store/slices/authSlice';
 
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
-// import Add from './components/modal/Add';
-
-import { logOut } from './store/slices/authSlice';
-
-// import { actions } from './store/slices/channelsSlice';
 
 const PrivateRoute = ({ children }) => {
-  const { loggedIn } = useSelector((state) => state.auth);
+  const { username } = useSelector((state) => state.auth);
+  // console.log(username);
   return (
-    loggedIn ? children : <Navigate to="/login" />
+    username ? children : <Navigate to="/login" />
   );
 };
 
 const AuthButton = () => {
   const dispatch = useDispatch();
-  const { loggedIn } = useSelector((state) => state.auth);
+  const { username } = useSelector((state) => state.auth);
+  // console.log(username);
   return (
-    loggedIn ? <Button onClick={() => dispatch(logOut())}>Выйти</Button> : null
+    username ? <Button onClick={() => dispatch(logOut())}>Выйти</Button> : null
   );
 };
 
-// const getSuccessToast = (toastMessage = null) => {
-//   if (toastMessage) {
-//     toast.success(toastMessage);
-//   }
-// };
-
 const App = () => {
-  // const getSuccessToast = (toastMessage = null) => {
-  //   // console.log('fff');
-  //   // console.log(toastMessage);
-  //   if (toastMessage) {
-  //     console.log(toastMessage);
-  //     toast.success(toastMessage);
-  //   }
-  // };
-
   console.log('App');
 
   return (
@@ -74,7 +53,6 @@ const App = () => {
           element={(
             <PrivateRoute>
               <HomePage />
-              {/* <ToastContainer /> */}
             </PrivateRoute>
           )}
         />
