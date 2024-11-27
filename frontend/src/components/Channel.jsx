@@ -1,5 +1,4 @@
-// import '../style.css';
-// import React, { useState } from 'react';
+
 import { useSelector, useDispatch } from 'react-redux';
 import {
   // Container,
@@ -14,7 +13,13 @@ import { actions as modalActions } from '../store/slices/modalSlice';
 const Channel = ({ channel, showModal }) => {
   const dispatch = useDispatch();
   const { currentChannelId } = useSelector((state) => state.channels);
-  console.log('channel');
+  // console.log('channel');
+
+  // const Handler = () => {
+  //   console.log(currentChannelId);
+  //   console.log('Нажато');
+  // };
+
   const ButtonComponent = (
     <Button
       variant={currentChannelId === channel.id ? 'secondary' : null}

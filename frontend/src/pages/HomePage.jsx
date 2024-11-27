@@ -12,28 +12,29 @@ import { actions as modalActions } from '../store/slices/modalSlice';
 import addButtonImg from '../assets/images/addButton.svg';
 
 const HomePage = () => {
-  console.log('Home');
+  // console.log('Home');
   const dispatch = useDispatch();
   const { authHeader } = useSelector((state) => state.auth);
+
 
   useEffect(() => {
     const socket = io();
     socket.on('newChannel', (payload) => {
       dispatch(channelsActions.addChannel(payload));
-      console.log('soc new');
+      // console.log('soc new');
+      // dispatch(channelsActions.setCurrentChannelId('1'));
     });
     socket.on('newMessage', (payload) => {
       dispatch(messagesActions.addMessage(payload));
+      // console.log(socket);
     });
     socket.on('renameChannel', (payload) => {
       dispatch(channelsActions.updateChannel({ id: payload.id, changes: payload }));
     });
-  }, [authHeader, dispatch]);
-
-  useEffect(() => {
-    console.log('disp');
-    dispatch(fetchChannels(authHeader));
-    dispatch(fetchMessages(authHeader));
+    socket.on('connect', () => {
+      dispatch(fetchChannels(authHeader));
+      dispatch(fetchMessages(authHeader));
+    });
   }, [authHeader, dispatch]);
 
   return (

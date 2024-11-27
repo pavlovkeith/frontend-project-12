@@ -3,7 +3,7 @@ import { selectors as messagesSelectors } from '../store/slices/messagesSlice';
 
 const Messages = () => {
   const { currentChannelId } = useSelector((state) => state.channels);
-  console.log('messages');
+  // console.log('messages');
 
   const messages = useSelector(messagesSelectors.selectAll)
     .filter((message) => message.channelId === currentChannelId);

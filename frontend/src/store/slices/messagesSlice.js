@@ -22,14 +22,16 @@ export const addMessage = createAsyncThunk(
 );
 
 const messagesAdapter = createEntityAdapter();
-
+// const initialState = messagesAdapter.getInitialState();
+// console.log(initialState);
 
 const initialState = messagesAdapter.getInitialState({ loadingStatus: 'idle', error: null });
-
+// }
+// };
 
 const messagesSlice = createSlice({
   name: 'messages',
-
+  // initialState: messagesAdapter.getInitialState({ loadingStatus: 'idle', error: null }),
   initialState,
   reducers: {
     resetState: () => initialState,
@@ -37,7 +39,7 @@ const messagesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMessages.fulfilled, messagesAdapter.addMany)
+      .addCase(fetchMessages.fulfilled, messagesAdapter.setAll)
       .addCase(addMessage.pending, (state) => {
         state.loadingStatus = 'loading';
         state.error = null;
@@ -45,6 +47,7 @@ const messagesSlice = createSlice({
       .addCase(addMessage.fulfilled, (state) => {
         state.loadingStatus = 'idle';
         state.error = null;
+        // console.log(state.entities);
       })
       .addCase(addMessage.rejected, (state, action) => {
         state.loadingStatus = 'failed';

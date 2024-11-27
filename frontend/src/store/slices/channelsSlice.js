@@ -37,15 +37,15 @@ const channelsAdapter = createEntityAdapter();
 // console.log(initialState);
 
 const initialState = channelsAdapter
-  .getInitialState({ loadingStatus: 'idle', error: null, currentChannelId: '1' });
+  .getInitialState({ loadingStatus: 'idle', error: null, currentChannelId: null });
 
 const channelsSlice = createSlice({
   name: 'channels',
   initialState,
   reducers: {
-    resetChannelError(state) {
-      state.error = null;
-    },
+    // resetChannelError(state) {
+    //   state.error = null;
+    // },
     setCurrentChannelId(state, { payload }) { // ////////////
       state.currentChannelId = payload;
     },
@@ -54,7 +54,13 @@ const channelsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchChannels.fulfilled, channelsAdapter.addMany)
+      .addCase(fetchChannels.fulfilled, (state, { payload }) => {
+        channelsAdapter.setAll(state, payload);
+        if (!state.ids.includes(state.currentChannelId)) {
+          const [firstChannelId] = state.ids;
+          state.currentChannelId = firstChannelId;
+        }
+      })
     // .addCase(sendTask.fulfilled, tasksAdapter.addOne)
     // .addCase(removeTask.fulfilled, tasksAdapter.removeOne);
       .addCase(addChannel.pending, (state) => {
