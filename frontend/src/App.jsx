@@ -36,6 +36,7 @@ const AuthButton = () => {
 
 const App = () => {
   console.log('App');
+  console.log(process.env.REACT_APP_ROLLBAR_TOKEN);
 
   return (
     <Router>

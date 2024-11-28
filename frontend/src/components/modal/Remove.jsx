@@ -1,9 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import { removeChannel } from '../../store/slices/channelsSlice';
 
 const Remove = ({ closeModal }) => {
+  const rollbar = useRollbar();
   const dispatch = useDispatch();
   const { authHeader } = useSelector((state) => state.auth);
   const { loadingStatus } = useSelector((state) => state.channels);
@@ -11,7 +14,15 @@ const Remove = ({ closeModal }) => {
   const { t } = useTranslation();
 
   const handleDelete = () => dispatch(removeChannel({ id: channel.id, authHeader }))
-    .then(() => closeModal());
+    .then((data) => {
+      closeModal();
+      if (!data.error) {
+        toast.success(t('toasts.channelDeleted'));
+      } else {
+        toast.error(t('toasts.connectionError'));
+        rollbar.error(data.error);
+      }
+    });
 
   // data-bs-dismiss="modal" class="btn" как добавить в closeButton
 

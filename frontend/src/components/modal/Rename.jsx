@@ -1,6 +1,8 @@
 import { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
+import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { renameChannel, selectors as channelsSelectors } from '../../store/slices/channelsSlice';
@@ -8,6 +10,7 @@ import { getFilteredMessage } from '../../store/slices/messagesSlice';
 import { getChannelValidationShema } from '../../validation';
 
 const Rename = ({ closeModal }) => {
+  const rollbar = useRollbar();
   const inputRef = useRef();
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -24,11 +27,19 @@ const Rename = ({ closeModal }) => {
 
   const formik = useFormik({
     initialValues: { name: channel.name },
-    validationSchema: getChannelValidationShema(channelsNames),
+    validationSchema: getChannelValidationShema(t, channelsNames),
     onSubmit: (value) => {
       const editedChannel = { name: getFilteredMessage(value.name.trim()) };
       dispatch(renameChannel({ editedChannel, id: channel.id, authHeader }))
-        .then(() => closeModal());
+        .then((data) => {
+          closeModal();
+          if (!data.error) {
+            toast.success(t('toasts.channelRenamed'));
+          } else {
+            toast.error(t('toasts.connectionError'));
+            rollbar.error(data.error);
+          }
+        });
     },
   });
 

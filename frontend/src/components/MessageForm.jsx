@@ -38,7 +38,7 @@ const MessageForm = () => {
         if (data.error) {
           inputRef.current.select();
           toast.error(t('toasts.connectionError'));
-          rollbar.error('Error fetching contact', data.error);
+          rollbar.error(data.error);
         } else {
           resetForm();
           inputRef.current.focus();

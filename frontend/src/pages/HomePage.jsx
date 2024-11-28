@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import Channels from '../components/Channels';
@@ -14,6 +16,7 @@ import { actions as modalActions } from '../store/slices/modalSlice';
 import addButtonImg from '../assets/images/addButton.svg';
 
 const HomePage = () => {
+  const rollbar = useRollbar();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -43,12 +46,16 @@ const HomePage = () => {
       dispatch(fetchChannels(authHeader)).then((data) => {
         if (data?.error && data?.payload === 401) {
           localStorage.removeItem('userToken');
+          rollbar.error(data.payload);
           navigate('/login');
+        } else if (data?.error) {
+          toast.error(t('toasts.connectionError'));
+          rollbar.error(data.payload);
         }
       });
       dispatch(fetchMessages(authHeader));
     });
-  }, [authHeader, dispatch, navigate]);
+  }, [authHeader, dispatch, navigate, rollbar, t]);
 
   return (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">

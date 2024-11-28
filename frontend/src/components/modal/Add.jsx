@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
+import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { addChannel, selectors as channelsSelectors } from '../../store/slices/channelsSlice';
@@ -8,6 +10,7 @@ import { getFilteredMessage } from '../../store/slices/messagesSlice';
 import { getChannelValidationShema } from '../../validation';
 
 const Add = ({ closeModal }) => {
+  const rollbar = useRollbar();
   const inputRef = useRef();
   const dispatch = useDispatch();
   const { authHeader } = useSelector((state) => state.auth);
@@ -24,10 +27,18 @@ const Add = ({ closeModal }) => {
 
   const formik = useFormik({
     initialValues: { name: '' },
-    validationSchema: getChannelValidationShema(channelsNames),
+    validationSchema: getChannelValidationShema(t, channelsNames),
     onSubmit: (value) => {
       const newChannel = { name: getFilteredMessage(value.name.trim()) };
-      dispatch(addChannel({ newChannel, authHeader })).then(() => closeModal());
+      dispatch(addChannel({ newChannel, authHeader })).then((data) => {
+        closeModal();
+        if (!data.error) {
+          toast.success(t('toasts.channelCreated'));
+        } else {
+          toast.error(t('toasts.connectionError'));
+          rollbar.error(data.error);
+        }
+      });
     },
   });
 

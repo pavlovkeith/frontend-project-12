@@ -1,6 +1,8 @@
 import { Button, Form, Card } from 'react-bootstrap';
 import { useEffect, useRef } from 'react';
+import { useRollbar } from '@rollbar/react';
 import { useFormik } from 'formik';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +12,7 @@ import { getSignupValidationShema } from '../validation';
 import signupFields from './fields';
 
 const SignupPage = () => {
+  const rollbar = useRollbar();
   const inputRef = useRef();
   const dispatch = useDispatch();
   const { loadingStatus, error } = useSelector((state) => state.auth);
@@ -26,12 +29,16 @@ const SignupPage = () => {
       password: '',
       confirmPassword: '',
     },
-    validationSchema: getSignupValidationShema(),
+    validationSchema: getSignupValidationShema(t),
     onSubmit: ({ username, password }) => {
       dispatch(signUp({ username: username.trim(), password })).then((data) => {
         if (!data.error) {
           navigate('/');
         } else {
+          if (data.payload !== 409) {
+            toast.error(t('toasts.connectionError'));
+          }
+          rollbar.error(data.payload);
           inputRef.current.select();
         }
       });

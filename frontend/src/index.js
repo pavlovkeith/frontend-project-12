@@ -26,6 +26,8 @@ i18n
 const rollbarConfig = {
   accessToken: process.env.ROLLBAR_TOKEN,
   environment: 'production',
+  // environment: 'development',
+  // environment: 'testenv',
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

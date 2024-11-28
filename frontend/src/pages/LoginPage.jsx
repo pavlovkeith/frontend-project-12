@@ -35,7 +35,7 @@ const LoginPage = () => {
         } else {
           inputRef.current.select();
           if (data.payload !== 401) {
-            toast.error('Ошибка соединения');
+            toast.error(t('toasts.connectionError'));
           }
           rollbar.error(data.payload);
         }
