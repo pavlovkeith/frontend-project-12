@@ -1,21 +1,15 @@
-import {
-  createSlice,
-} from '@reduxjs/toolkit';
-
-// const initialState = { type: null, show: false, channel: {} };
+import { createSlice } from '@reduxjs/toolkit';
 
 const modalSlice = createSlice({
   name: 'modal',
   initialState: { type: null, show: false, channel: {} },
   reducers: {
-    showModal(state, { payload }) {
-      state.type = payload.type;
-      state.show = payload.show;
-      state.channel = payload.channel;
-      // console.log(state.type);
+    showModal(state, { payload: { type, show, channel } }) {
+      state.type = type;
+      state.show = show;
+      state.channel = channel;
     },
     hideModal(state) {
-    // dispatch(channelsActions.resetChannelError());
       state.show = false;
     },
     resetModal(state) {
@@ -25,5 +19,4 @@ const modalSlice = createSlice({
 });
 
 export const { actions } = modalSlice;
-// export const selectors = channelsAdapter.getSelectors((state) => state.channels);
 export default modalSlice.reducer;

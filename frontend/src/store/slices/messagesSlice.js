@@ -2,8 +2,11 @@ import {
   createSlice, createEntityAdapter, createAsyncThunk,
 } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import filter from 'leo-profanity';
 import routes from '../../routes';
+import { actions as channelsActions } from './channelsSlice';
+
+filter.add(filter.getDictionary('ru'));
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
@@ -21,20 +24,14 @@ export const addMessage = createAsyncThunk(
   },
 );
 
-const messagesAdapter = createEntityAdapter();
-// const initialState = messagesAdapter.getInitialState();
-// console.log(initialState);
+export const getFilteredMessage = (message) => filter.clean(message);
 
-const initialState = messagesAdapter.getInitialState({ loadingStatus: 'idle', error: null });
-// }
-// };
+const messagesAdapter = createEntityAdapter();
 
 const messagesSlice = createSlice({
   name: 'messages',
-  // initialState: messagesAdapter.getInitialState({ loadingStatus: 'idle', error: null }),
-  initialState,
+  initialState: messagesAdapter.getInitialState({ loadingStatus: 'idle', error: null }),
   reducers: {
-    resetState: () => initialState,
     addMessage: messagesAdapter.addOne,
   },
   extraReducers: (builder) => {
@@ -47,12 +44,16 @@ const messagesSlice = createSlice({
       .addCase(addMessage.fulfilled, (state) => {
         state.loadingStatus = 'idle';
         state.error = null;
-        // console.log(state.entities);
       })
       .addCase(addMessage.rejected, (state, action) => {
         state.loadingStatus = 'failed';
         state.error = action.error;
-        toast.error('Ошибка соединения');
+      })
+      .addCase(channelsActions.removeChannel, (state, { payload }) => {
+        const allMessages = Object.values(state.entities);
+        const currentChannelMessagesIds = allMessages
+          .filter((message) => message.channelId === payload).map(({ id }) => id);
+        messagesAdapter.removeMany(state, currentChannelMessagesIds);
       });
   },
 });

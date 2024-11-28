@@ -1,23 +1,21 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { ToastContainer, toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import 'react-toastify/dist/ReactToastify.css';
 import { useFormik } from 'formik';
 import { Form, InputGroup } from 'react-bootstrap';
-// import * as yup from 'yup';
-// import {
-//   addChannel,
-//   selectors as channelsSelectors,
-//   actions as channelsActions,
-// } from '../../store/slices/channelsSlice';
 import sendButtonImg from '../assets/images/sendButton.svg';
-import { addMessage } from '../store/slices/messagesSlice';
+import { addMessage, getFilteredMessage } from '../store/slices/messagesSlice';
 
 const MessageForm = () => {
+  const rollbar = useRollbar();
   const inputRef = useRef();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { authHeader, username } = useSelector((state) => state.auth);
-  const { currentChannelId } = useSelector((state) => state.channels);
+  const { currentChannel } = useSelector((state) => state.channels);
   const { loadingStatus } = useSelector((state) => state.messages);
   const { type } = useSelector((state) => state.modal);
 
@@ -25,25 +23,27 @@ const MessageForm = () => {
     if (!type) {
       inputRef.current.focus();
     }
-  }, [type, currentChannelId]);
+  }, [type, currentChannel]);
 
   const formik = useFormik({
     initialValues: { body: '' },
     onSubmit: (value, { resetForm }) => {
-      // console.log(value);
+      const filtredMessage = getFilteredMessage(value.body.trim());
       const newMessage = {
-        body: value.body.trim(),
-        channelId: currentChannelId,
+        body: filtredMessage,
+        channelId: currentChannel.id,
         username,
       };
-      dispatch(addMessage({ newMessage, authHeader }));
-      // .then((data) => {
-      // console.log(data);
-      // if (!data.error) {
-      resetForm();
-      inputRef.current.focus();
-      // }
-      // });
+      dispatch(addMessage({ newMessage, authHeader })).then((data) => {
+        if (data.error) {
+          inputRef.current.select();
+          toast.error(t('toasts.connectionError'));
+          rollbar.error('Error fetching contact', data.error);
+        } else {
+          resetForm();
+          inputRef.current.focus();
+        }
+      });
     },
   });
 
@@ -53,12 +53,11 @@ const MessageForm = () => {
         <InputGroup hasValidation>
           <Form.Control
             name="body"
-            aria-label="Новое сообщение"
-            placeholder="Введите сообщение..."
+            aria-label={t('placeholders.newMessage')}
+            placeholder={t('placeholders.enterMessage')}
             className="border-0 p-0 ps-2"
             ref={inputRef}
             onChange={formik.handleChange}
-            // onBlur={formik.handleBlur}
             value={formik.values.body}
           />
           <button
@@ -66,8 +65,8 @@ const MessageForm = () => {
             className="btn btn-group-vertical"
             disabled={!formik.values.body || loadingStatus === 'loading'}
           >
-            <img src={sendButtonImg} alt="Отправить" />
-            <span className="visually-hidden">Отправить</span>
+            <img src={sendButtonImg} alt={t('buttons.send')} />
+            <span className="visually-hidden">{t('buttons.send')}</span>
           </button>
         </InputGroup>
       </Form>

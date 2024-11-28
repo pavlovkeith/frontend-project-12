@@ -1,30 +1,19 @@
-
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  // Container,
-  Button,
-  Dropdown,
-  ButtonGroup,
-} from 'react-bootstrap';
-// import { selectors } from '../store/slices/channelsSlice';
+import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { actions as channelsActions } from '../store/slices/channelsSlice';
 import { actions as modalActions } from '../store/slices/modalSlice';
 
-const Channel = ({ channel, showModal }) => {
+const Channel = ({ channel }) => {
   const dispatch = useDispatch();
-  const { currentChannelId } = useSelector((state) => state.channels);
-  // console.log('channel');
-
-  // const Handler = () => {
-  //   console.log(currentChannelId);
-  //   console.log('Нажато');
-  // };
+  const { t } = useTranslation();
+  const { currentChannel } = useSelector((state) => state.channels);
 
   const ButtonComponent = (
     <Button
-      variant={currentChannelId === channel.id ? 'secondary' : null}
+      variant={currentChannel.id === channel.id ? 'secondary' : null}
       className="w-100 rounded-0 text-start text-truncate shadow-none"
-      onClick={() => dispatch(channelsActions.setCurrentChannelId(channel.id))}
+      onClick={() => dispatch(channelsActions.setCurrentChannel(channel))}
     >
       <span className="me-1">#</span>
       {channel.name}
@@ -42,26 +31,26 @@ const Channel = ({ channel, showModal }) => {
         <Dropdown.Toggle
           className="shadow-none"
           split
-          variant={currentChannelId === channel.id ? 'secondary' : null}
+          variant={currentChannel.id === channel.id ? 'secondary' : null}
           // id="dropdown-split-basic"
         >
-          <span className="visually-hidden">Управление каналом</span>
+          <span className="visually-hidden">{t('buttons.channelControl')}</span>
         </Dropdown.Toggle>
 
         <Dropdown.Menu variant="secondary">
           <Dropdown.Item
-            onClick={() => showModal('removing', true)}
+            onClick={() => dispatch(modalActions
+              .showModal({ type: 'removing', show: true, channel }))}
             as="button"
           >
-            Удалить
+            {t('buttons.delete')}
           </Dropdown.Item>
           <Dropdown.Item
-            // onClick={() => showModal('renaming', true, channel.name)}
             onClick={() => dispatch(modalActions
               .showModal({ type: 'renaming', show: true, channel }))}
             as="button"
           >
-            Переименовать
+            {t('buttons.rename')}
           </Dropdown.Item>
         </Dropdown.Menu>
       </ButtonGroup>

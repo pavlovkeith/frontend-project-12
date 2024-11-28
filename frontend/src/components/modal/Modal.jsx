@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
 import Add from './Add.jsx';
-// import Remove from './Remove.jsx';
+import Remove from './Remove.jsx';
 import Rename from './Rename.jsx';
 import { actions as modalActions } from '../../store/slices/modalSlice';
 
 const modals = {
   adding: Add,
-  // removing: Remove,
+  removing: Remove,
   renaming: Rename,
 };
 
@@ -25,9 +25,7 @@ const Modal = () => {
     return null;
   }
   const ModalComponent = modals[type];
-  return (
-    <ModalComponent closeModal={closeModal} />
-  );
+  return <ModalComponent closeModal={closeModal} />;
 };
 
 export default Modal;

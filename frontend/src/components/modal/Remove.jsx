@@ -1,72 +1,48 @@
-import React, { useRef, useEffect } from 'react';
-// import _ from 'lodash';
-import { useFormik } from 'formik';
-import {
-  Modal,
-  Form,
-  Button,
-} from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { Modal, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { removeChannel } from '../../store/slices/channelsSlice';
 
-// const generateOnSubmit = ({ setItems, onHide }) => (values) => {
-//   const item = { id: _.uniqueId(), body: values.body };
-//   setItems((items) => {
-//     items.push(item);
-//   });
-//   onHide();
-// };
+const Remove = ({ closeModal }) => {
+  const dispatch = useDispatch();
+  const { authHeader } = useSelector((state) => state.auth);
+  const { loadingStatus } = useSelector((state) => state.channels);
+  const { show, channel } = useSelector((state) => state.modal);
+  const { t } = useTranslation();
 
-const Remove = ({ modalInfo, handleClose }) => {
-  const { channelName } = modalInfo;
+  const handleDelete = () => dispatch(removeChannel({ id: channel.id, authHeader }))
+    .then(() => closeModal());
 
-  const inputRef = useRef();
-  useEffect(() => {
-    if (modalInfo.show) {
-      // inputRef.current.focus();
-      inputRef.current.select(); // ///////
-    }
-  }, [modalInfo.show]);
-
-  const formik = useFormik({
-    initialValues: { name: channelName },
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
+  // data-bs-dismiss="modal" class="btn" как добавить в closeButton
 
   return (
-    <Modal show={modalInfo.show} centered onHide={handleClose}>
+    <Modal show={show} style={{ top: '20%' }} onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('headers.removeChannel')}</Modal.Title>
       </Modal.Header>
-
       <Modal.Body>
-        <Form onSubmit={formik.handleSubmit}>
-          <Form.Group>
-            <Form.Control
-              // required
-              className="mb-2"
-              // placeholder="Ваш ник"
-              ref={inputRef}
-              onChange={formik.handleChange}
-              // onBlur={formik.handleBlur}
-              value={formik.values.name}
-              name="name"
-              id="name"
-            />
-            <Form.Label className="visually-hidden" htmlFor="name">Имя канала</Form.Label>
-            <Form.Control.Feedback type="invalid">Должно быть уникальным</Form.Control.Feedback>
-            <div className="d-flex justify-content-end">
-              <Button variant="secondary" onClick={handleClose} className="me-2">
-                Отменить
-              </Button>
-              <Button variant="primary" type="submit">Отправить</Button>
-            </div>
-          </Form.Group>
-        </Form>
+        <p className="lead">{t('questions.confirm')}</p>
+        <div className="d-flex justify-content-end">
+          <Button
+            disabled={loadingStatus === 'loading'}
+            variant="secondary"
+            onClick={closeModal}
+            className="me-2"
+          >
+            {t('buttons.cancel')}
+          </Button>
+          <Button
+            disabled={loadingStatus === 'loading'}
+            variant="danger"
+            type="button"
+            onClick={() => handleDelete()}
+          >
+            {t('buttons.delete')}
+          </Button>
+        </div>
       </Modal.Body>
     </Modal>
   );
 };
 
 export default Remove;
-// END

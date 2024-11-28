@@ -1,18 +1,21 @@
 import { Button, Form, Card } from 'react-bootstrap';
 import React, { useEffect, useRef } from 'react';
-// import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useRollbar } from '@rollbar/react';
+import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import loginImage from '../assets/images/login.jpg';
 import { logIn } from '../store/slices/authSlice';
 
 const LoginPage = () => {
+  const rollbar = useRollbar();
   const inputRef = useRef();
   const dispatch = useDispatch();
   const { loadingStatus, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   console.log('login');
 
@@ -31,6 +34,10 @@ const LoginPage = () => {
           navigate('/');
         } else {
           inputRef.current.select();
+          if (data.payload !== 401) {
+            toast.error('Ошибка соединения');
+          }
+          rollbar.error(data.payload);
         }
       });
     },
@@ -47,11 +54,11 @@ const LoginPage = () => {
                   style={{ maxWidth: '200px' }}
                   src={loginImage}
                   className="rounded-circle"
-                  alt="Войти"
+                  alt={t('headers.login')}
                 />
               </div>
               <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
-                <h1 className="text-center mb-4">Войти</h1>
+                <h1 className="text-center mb-4">{t('headers.login')}</h1>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     required
@@ -60,15 +67,13 @@ const LoginPage = () => {
                     type="text"
                     id="username"
                     name="username"
-                    placeholder="Ваш ник"
+                    placeholder={t('placeholders.nickname')}
                     onChange={formik.handleChange}
-                    // onBlur={formik.handleBlur}
                     isInvalid={error === 401}
-                    // isInvalid={formik.touched.username && formik.errors.username}
                     value={formik.values.username}
                     ref={inputRef}
                   />
-                  <Form.Label htmlFor="username">Ваш ник</Form.Label>
+                  <Form.Label htmlFor="username">{t('placeholders.nickname')}</Form.Label>
                 </Form.Floating>
                 <Form.Floating className="mb-4">
                   <Form.Control
@@ -79,19 +84,16 @@ const LoginPage = () => {
                     name="password"
                     type="password"
                     onChange={formik.handleChange}
-                    // onBlur={formik.handleBlur}
-                    // isInvalid={formik.touched.password && formik.errors.password}
-                    // isInvalid={formik.touched.password}
                     value={formik.values.password}
-                    placeholder="Пароль"
+                    placeholder={t('placeholders.password')}
                     isInvalid={error === 401}
                   />
-                  <Form.Label htmlFor="password">Пароль</Form.Label>
+                  <Form.Label htmlFor="password">{t('placeholders.password')}</Form.Label>
                   <Form.Control.Feedback
                     type="invalid"
                     tooltip
                   >
-                    Неверные имя пользователя или пароль
+                    {t('errors.loginError')}
                   </Form.Control.Feedback>
                 </Form.Floating>
                 <Button
@@ -100,17 +102,18 @@ const LoginPage = () => {
                   variant="outline-primary"
                   className="w-100 mb-3"
                 >
-                  Войти
+                  {t('buttons.login')}
                 </Button>
               </Form>
             </Card.Body>
             <Card.Footer className="p-4">
               <div className="text-center">
-                <span>Нет аккаунта? Регистрация</span>
+                <span>{t('questions.noAccount')}</span>
+                <span> </span>
+                <a href="/signup">{t('links.registration')}</a>
               </div>
             </Card.Footer>
           </Card>
-          {/* <ToastContainer /> */}
         </div>
       </div>
     </div>

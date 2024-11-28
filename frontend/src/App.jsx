@@ -15,6 +15,7 @@ import { logOut } from './store/slices/authSlice';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
+import SignupPage from './pages/SignupPage';
 
 const PrivateRoute = ({ children }) => {
   const { username } = useSelector((state) => state.auth);
@@ -46,7 +47,7 @@ const App = () => {
       </Navbar>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        {/* <Route path="/signup" element={<Signup />} /> */}
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route
           path="/"
