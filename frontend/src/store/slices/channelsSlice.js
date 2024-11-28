@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
   createSlice, createEntityAdapter, createAsyncThunk,
 } from '@reduxjs/toolkit';
@@ -82,6 +83,11 @@ const channelsSlice = createSlice({
           state.currentChannel = state.entities[firstChannelId];
         }
       })
+      // .addCase(fetchChannels.rejected, ({ payload }) => {
+      //   if (payload && payload !== 401) {
+      //     toast.error('Ошибка соединения');
+      //   }
+      // })
       .addCase(addChannel.pending, (state) => {
         state.loadingStatus = 'loading';
         state.error = null;
