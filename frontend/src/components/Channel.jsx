@@ -12,7 +12,6 @@ const Channel = ({ channel }) => {
   const ButtonComponent = (
     <Button
       variant={currentChannel.id === channel.id ? 'secondary' : null}
-      // className="w-100 rounded-0 text-start text-truncate shadow-none"
       className="w-100 rounded-0 text-start text-truncate"
       onClick={() => dispatch(channelsActions.setCurrentChannel(channel))}
     >
@@ -33,7 +32,6 @@ const Channel = ({ channel }) => {
           className="shadow-none"
           split
           variant={currentChannel.id === channel.id ? 'secondary' : null}
-          // id="dropdown-split-basic"
         >
           <span className="visually-hidden">{t('buttons.channelControl')}</span>
         </Dropdown.Toggle>

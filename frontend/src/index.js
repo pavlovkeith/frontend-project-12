@@ -24,10 +24,8 @@ i18n
   .init(options);
 
 const rollbarConfig = {
-  accessToken: process.env.ROLLBAR_TOKEN,
+  accessToken: process.env.ROLLBAR_TOKEN, // на продакшене Rollbar не работает
   environment: 'production',
-  // environment: 'development',
-  // environment: 'testenv',
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -77,7 +77,6 @@ const SignupPage = () => {
                       name={id}
                       placeholder={t(description)}
                       onChange={formik.handleChange}
-                      // aria-describedby="passwordHelpBlock"
                       onBlur={formik.handleBlur}
                       isInvalid={error === 409
                         || (formik.touched[id] && formik.errors[id])}
@@ -89,7 +88,6 @@ const SignupPage = () => {
                       {error === 409 ? (id === 'username' && t('errors.registerError'))
                         : formik.errors[id]}
                     </Form.Control.Feedback>
-                    {/* placement="right" */}
                   </Form.Floating>
                 ))}
 

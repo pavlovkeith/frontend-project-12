@@ -24,8 +24,6 @@ const Remove = ({ closeModal }) => {
       }
     });
 
-  // data-bs-dismiss="modal" class="btn" как добавить в closeButton
-
   return (
     <Modal show={show} style={{ top: '20%' }} onHide={closeModal}>
       <Modal.Header closeButton>

@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-// import { toast } from 'react-toastify';
 import routes from '../../routes';
 
 export const logIn = createAsyncThunk(
@@ -80,10 +79,6 @@ const authSlice = createSlice({
         state.username = null;
         state.authHeader = {};
         localStorage.removeItem('userToken');
-        // if (payload !== 401) {
-        //   // Rollbar.error('401 Erro');
-        //   toast.error('Ошибка соединения');
-        // }
       })
       .addCase(signUp.pending, (state) => {
         state.loadingStatus = 'loading';
@@ -102,9 +97,6 @@ const authSlice = createSlice({
         state.username = null;
         state.authHeader = {};
         localStorage.removeItem('userToken');
-        // if (payload !== 409) {
-        //   toast.error('Ошибка соединения');
-        // }
       });
   },
 });

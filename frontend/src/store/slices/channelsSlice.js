@@ -3,7 +3,6 @@ import {
   createSlice, createEntityAdapter, createAsyncThunk,
 } from '@reduxjs/toolkit';
 import axios from 'axios';
-// import { toast } from 'react-toastify';
 import routes from '../../routes';
 
 export const fetchChannels = createAsyncThunk(
@@ -83,11 +82,6 @@ const channelsSlice = createSlice({
           state.currentChannel = state.entities[firstChannelId];
         }
       })
-      // .addCase(fetchChannels.rejected, ({ payload }) => {
-      //   if (payload && payload !== 401) {
-      //     toast.error('Ошибка соединения');
-      //   }
-      // })
       .addCase(addChannel.pending, (state) => {
         state.loadingStatus = 'loading';
         state.error = null;
@@ -96,12 +90,10 @@ const channelsSlice = createSlice({
         state.loadingStatus = 'idle';
         state.error = null;
         state.currentChannel = payload;
-        // toast.success('Канал создан');
       })
       .addCase(addChannel.rejected, (state, action) => {
         state.loadingStatus = 'failed';
         state.error = action.error;
-        // toast.error('Ошибка соединения');
       })
       .addCase(renameChannel.pending, (state) => {
         state.loadingStatus = 'loading';
@@ -110,12 +102,10 @@ const channelsSlice = createSlice({
       .addCase(renameChannel.fulfilled, (state) => {
         state.loadingStatus = 'idle';
         state.error = null;
-        // toast.success('Канал переименован');
       })
       .addCase(renameChannel.rejected, (state, action) => {
         state.loadingStatus = 'failed';
         state.error = action.error;
-        // toast.error('Ошибка соединения');
       })
       .addCase(removeChannel.pending, (state) => {
         state.loadingStatus = 'loading';
@@ -124,12 +114,10 @@ const channelsSlice = createSlice({
       .addCase(removeChannel.fulfilled, (state) => {
         state.loadingStatus = 'idle';
         state.error = null;
-        // toast.success('Канал удалён');
       })
       .addCase(removeChannel.rejected, (state, action) => {
         state.loadingStatus = 'failed';
         state.error = action.error;
-        // toast.error('Ошибка соединения');
       });
   },
 });

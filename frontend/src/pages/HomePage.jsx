@@ -22,12 +22,6 @@ const HomePage = () => {
   const { t } = useTranslation();
   const { authHeader } = useSelector((state) => state.auth);
 
-  // const s = useSelector((state) => state.messages);
-  // console.log(s.ids.length);
-
-  // const x = useSelector((state) => state.channels);
-  // console.log(x);
-
   useEffect(() => {
     const socket = io();
     socket.on('newChannel', (payload) => {

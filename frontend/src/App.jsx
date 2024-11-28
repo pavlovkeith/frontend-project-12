@@ -19,7 +19,6 @@ import SignupPage from './pages/SignupPage';
 
 const PrivateRoute = ({ children }) => {
   const { username } = useSelector((state) => state.auth);
-  // console.log(username);
   return (
     username ? children : <Navigate to="/login" />
   );
@@ -28,39 +27,33 @@ const PrivateRoute = ({ children }) => {
 const AuthButton = () => {
   const dispatch = useDispatch();
   const { username } = useSelector((state) => state.auth);
-  // console.log(username);
   return (
     username ? <Button onClick={() => dispatch(logOut())}>Выйти</Button> : null
   );
 };
 
-const App = () => {
-  console.log('App');
-  console.log(process.env.REACT_APP_ROLLBAR_TOKEN);
-
-  return (
-    <Router>
-      <Navbar bg="white" expand="lg" className="shadow-sm">
-        <div className="container">
-          <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
-          <AuthButton />
-        </div>
-      </Navbar>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-        <Route
-          path="/"
-          element={(
-            <PrivateRoute>
-              <HomePage />
-            </PrivateRoute>
-          )}
-        />
-      </Routes>
-    </Router>
-  );
-};
+const App = () => (
+  <Router>
+    <Navbar bg="white" expand="lg" className="shadow-sm">
+      <div className="container">
+        <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
+        <AuthButton />
+      </div>
+    </Navbar>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+      <Route
+        path="/"
+        element={(
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        )}
+      />
+    </Routes>
+  </Router>
+);
 
 export default App;
