@@ -54,7 +54,9 @@ const Add = ({ closeModal }) => {
               className="mb-2"
               ref={inputRef}
               onChange={formik.handleChange}
+              // isInvalid={formik.errors.name}
               isInvalid={formik.touched.name && formik.errors.name}
+              // isInvalid={!formik.isValid}
               value={formik.values.name}
               name="name"
               id="name"

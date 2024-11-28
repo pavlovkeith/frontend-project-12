@@ -12,7 +12,8 @@ const Channel = ({ channel }) => {
   const ButtonComponent = (
     <Button
       variant={currentChannel.id === channel.id ? 'secondary' : null}
-      className="w-100 rounded-0 text-start text-truncate shadow-none"
+      // className="w-100 rounded-0 text-start text-truncate shadow-none"
+      className="w-100 rounded-0 text-start text-truncate"
       onClick={() => dispatch(channelsActions.setCurrentChannel(channel))}
     >
       <span className="me-1">#</span>
