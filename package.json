@@ -13,7 +13,6 @@
   "author": "Nikita Pavlov",
   "license": "ISC",
   "dependencies": {
-    "@hexlet/chat-server": "^2.0.3",
-    "minimatch": "^9.0.5"
+    "@hexlet/chat-server": "^2.0.3"
   }
 }
