@@ -5,9 +5,13 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import 'react-toastify/dist/ReactToastify.css';
 import { useFormik } from 'formik';
+import filter from 'leo-profanity';
 import { Form, InputGroup } from 'react-bootstrap';
 import sendButtonImg from '../assets/images/sendButton.svg';
-import { addMessage, getFilteredMessage } from '../store/slices/messagesSlice';
+import { addMessage } from '../store/slices/messagesSlice';
+
+filter.add(filter.getDictionary('ru'));
+const getFilteredMessage = (message) => filter.clean(message);
 
 const MessageForm = () => {
   const rollbar = useRollbar();

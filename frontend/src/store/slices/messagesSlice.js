@@ -3,11 +3,8 @@ import {
   createSlice, createEntityAdapter, createAsyncThunk,
 } from '@reduxjs/toolkit';
 import axios from 'axios';
-import filter from 'leo-profanity';
 import routes from '../../routes';
 import { actions as channelsActions } from './channelsSlice';
-
-filter.add(filter.getDictionary('ru'));
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
@@ -24,8 +21,6 @@ export const addMessage = createAsyncThunk(
     return response.data; // => { id: '1', body: 'new message', channelId: '1', username: 'admin }
   },
 );
-
-export const getFilteredMessage = (message) => filter.clean(message);
 
 const messagesAdapter = createEntityAdapter();
 

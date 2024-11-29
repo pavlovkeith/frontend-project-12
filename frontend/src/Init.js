@@ -45,12 +45,10 @@ const Init = ({ children }) => {
     dispatch(channelsActions.removeChannel(payload.id));
   });
   socket.on('connect', () => {
-    console.log('con');
     dispatch(setConnectionStatus(true));
   });
   socket.on('disconnect', () => {
     dispatch(setConnectionStatus(false));
-    console.log('dis');
   });
 
   return (

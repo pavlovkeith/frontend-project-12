@@ -9,11 +9,11 @@ import Channels from '../components/Channels';
 import Messages from '../components/Messages';
 import MessageForm from '../components/MessageForm';
 import Modal from '../components/modal/Modal';
+import { logOut } from '../store/slices/authSlice';
 import { fetchChannels } from '../store/slices/channelsSlice';
 import { fetchMessages } from '../store/slices/messagesSlice';
 import { actions as modalActions } from '../store/slices/modalSlice';
 import addButtonImg from '../assets/images/addButton.svg';
-import { ROUTES } from '../routes';
 
 const HomePage = () => {
   const rollbar = useRollbar();
@@ -25,9 +25,8 @@ const HomePage = () => {
   useEffect(() => {
     dispatch(fetchChannels(authHeader)).then((data) => {
       if (data?.error && data?.payload === 401) {
-        localStorage.removeItem('userToken');
+        dispatch(logOut());
         rollbar.error(data.payload);
-        navigate(ROUTES.login);
       } else if (data?.error) {
         toast.error(t('toasts.connectionError'));
         rollbar.error(data.payload);

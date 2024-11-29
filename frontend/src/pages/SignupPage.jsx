@@ -9,7 +9,8 @@ import { useTranslation } from 'react-i18next';
 import signupImage from '../assets/images/signup.jpg';
 import { signUp } from '../store/slices/authSlice';
 import { getSignupValidationShema } from '../validation';
-import signupFields from './fields';
+import signupFields from '../fields';
+import { ROUTES } from '../routes';
 
 const SignupPage = () => {
   const rollbar = useRollbar();
@@ -33,7 +34,7 @@ const SignupPage = () => {
     onSubmit: ({ username, password }) => {
       dispatch(signUp({ username: username.trim(), password })).then((data) => {
         if (!data.error) {
-          navigate('/');
+          navigate(ROUTES.home);
         } else {
           if (data.payload !== 409) {
             toast.error(t('toasts.connectionError'));

@@ -17,6 +17,9 @@ import HomePage from './pages/HomePage';
 import SignupPage from './pages/SignupPage';
 import { ROUTES } from './routes';
 
+const codeOfStarSymbol = 42;
+// const starSymbol = '*';
+
 const PrivateRoute = ({ children }) => {
   const { username } = useSelector((state) => state.auth);
   return (
@@ -33,28 +36,31 @@ const AuthButton = () => {
   );
 };
 
-const App = () => (
-  <Router>
-    <Navbar bg="white" expand="lg" className="shadow-sm">
-      <div className="container">
-        <Navbar.Brand as={Link} to={ROUTES.home}>Hexlet Chat</Navbar.Brand>
-        <AuthButton />
-      </div>
-    </Navbar>
-    <Routes>
-      <Route path={ROUTES.login} element={<LoginPage />} />
-      <Route path={ROUTES.signup} element={<SignupPage />} />
-      <Route path={ROUTES.notfound} element={<NotFoundPage />} />
-      <Route
-        path={ROUTES.home}
-        element={(
-          <PrivateRoute>
-            <HomePage />
-          </PrivateRoute>
-        )}
-      />
-    </Routes>
-  </Router>
-);
+const App = () => {
+  const { t } = useTranslation();
+  return (
+    <Router>
+      <Navbar bg="white" expand="lg" className="shadow-sm">
+        <div className="container">
+          <Navbar.Brand as={Link} to={ROUTES.home}>{t('headers.chatName')}</Navbar.Brand>
+          <AuthButton />
+        </div>
+      </Navbar>
+      <Routes>
+        <Route path={ROUTES.login} element={<LoginPage />} />
+        <Route path={ROUTES.signup} element={<SignupPage />} />
+        <Route path={String.fromCharCode(codeOfStarSymbol)} element={<NotFoundPage />} />
+        <Route
+          path={ROUTES.home}
+          element={(
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          )}
+        />
+      </Routes>
+    </Router>
+  );
+};
 
 export default App;

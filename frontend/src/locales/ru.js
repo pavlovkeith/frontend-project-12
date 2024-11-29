@@ -1,6 +1,7 @@
 export default {
   translation: {
     headers: {
+      chatName: 'Hexlet Chat',
       login: 'Войти',
       logout: 'Выйти',
       registration: 'Регистрация',

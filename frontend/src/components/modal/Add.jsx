@@ -5,9 +5,12 @@ import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import filter from 'leo-profanity';
 import { addChannel, selectors as channelsSelectors } from '../../store/slices/channelsSlice';
-import { getFilteredMessage } from '../../store/slices/messagesSlice';
 import { getChannelValidationShema } from '../../validation';
+
+filter.add(filter.getDictionary('ru'));
+export const getFilteredChanneName = (channelName) => filter.clean(channelName);
 
 const Add = ({ closeModal }) => {
   const rollbar = useRollbar();
@@ -29,7 +32,7 @@ const Add = ({ closeModal }) => {
     initialValues: { name: '' },
     validationSchema: getChannelValidationShema(t, channelsNames),
     onSubmit: (value) => {
-      const newChannel = { name: getFilteredMessage(value.name.trim()) };
+      const newChannel = { name: getFilteredChanneName(value.name.trim()) };
       dispatch(addChannel({ newChannel, authHeader })).then((data) => {
         closeModal();
         if (!data.error) {
