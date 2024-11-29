@@ -59,6 +59,9 @@ const authSlice = createSlice({
       state.error = null;
       localStorage.removeItem('userToken');
     },
+    setConnectionStatus(state, { payload }) {
+      state.isConnected = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -101,5 +104,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logOut } = authSlice.actions;
+export const { logOut, setConnectionStatus } = authSlice.actions;
 export default authSlice.reducer;

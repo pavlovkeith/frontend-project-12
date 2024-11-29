@@ -18,7 +18,7 @@ const Modal = () => {
     dispatch(modalActions.hideModal());
     setTimeout(() => {
       dispatch(modalActions.resetModal());
-    }, '100');
+    }, '100'); // 300ms waiting for modal-closing animation
   };
 
   if (!type) {

@@ -12,6 +12,7 @@ export default {
     },
     buttons: {
       login: 'Войти',
+      logout: 'Выйти',
       register: 'Зарегистрироваться',
       addChannel: 'Добавить канал',
       channelControl: 'Управление каналом',
@@ -48,7 +49,7 @@ export default {
     links: {
       registration: 'Регистрация',
       direction: 'Но вы можете перейти',
-      main: 'На главную страницу',
+      main: 'на главную страницу',
     },
     toasts: {
       channelDeleted: 'Канал удалён',

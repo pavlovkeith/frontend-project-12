@@ -91,4 +91,3 @@ const Add = ({ closeModal }) => {
 };
 
 export default Add;
-// END

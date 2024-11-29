@@ -1,13 +1,21 @@
-# Установка зависимостей
-install:
-	npm install
-	make -C frontend install
+lint-frontend:
+	make -C frontend lint
 
-# Сборка проекта
+install:
+	npm ci
+
+start-frontend:
+	make -C frontend start
+
+start-backend:
+	npm run start
+
+start:
+	make start-backend
+
+develop:
+	make start-backend & make start-frontend
+
 build:
 	rm -rf frontend/build
-	make -C frontend build
-
-# Запуск проекта
-start:
-	npx start-server -s ./frontend/build
+	npm run build

@@ -1,0 +1,17 @@
+name: eslint-check
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - '**'
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install deps
+        run: cd frontend;npm ci
+      - name: Lint
+        run: npx eslint --ext js,jsx --no-eslintrc --config .eslintrc.yml .

@@ -4,52 +4,37 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
-import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import Channels from '../components/Channels';
 import Messages from '../components/Messages';
 import MessageForm from '../components/MessageForm';
 import Modal from '../components/modal/Modal';
-import { fetchChannels, actions as channelsActions } from '../store/slices/channelsSlice';
-import { fetchMessages, actions as messagesActions } from '../store/slices/messagesSlice';
+import { fetchChannels } from '../store/slices/channelsSlice';
+import { fetchMessages } from '../store/slices/messagesSlice';
 import { actions as modalActions } from '../store/slices/modalSlice';
 import addButtonImg from '../assets/images/addButton.svg';
+import { ROUTES } from '../routes';
 
 const HomePage = () => {
   const rollbar = useRollbar();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { authHeader } = useSelector((state) => state.auth);
+  const { authHeader, isConnected } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const socket = io();
-    socket.on('newChannel', (payload) => {
-      dispatch(channelsActions.addChannel(payload));
+    dispatch(fetchChannels(authHeader)).then((data) => {
+      if (data?.error && data?.payload === 401) {
+        localStorage.removeItem('userToken');
+        rollbar.error(data.payload);
+        navigate(ROUTES.login);
+      } else if (data?.error) {
+        toast.error(t('toasts.connectionError'));
+        rollbar.error(data.payload);
+      }
     });
-    socket.on('newMessage', (payload) => {
-      dispatch(messagesActions.addMessage(payload));
-    });
-    socket.on('renameChannel', (payload) => {
-      dispatch(channelsActions.updateChannel({ id: payload.id, changes: payload }));
-    });
-    socket.on('removeChannel', (payload) => {
-      dispatch(channelsActions.removeChannel(payload.id));
-    });
-    socket.on('connect', () => {
-      dispatch(fetchChannels(authHeader)).then((data) => {
-        if (data?.error && data?.payload === 401) {
-          localStorage.removeItem('userToken');
-          rollbar.error(data.payload);
-          navigate('/login');
-        } else if (data?.error) {
-          toast.error(t('toasts.connectionError'));
-          rollbar.error(data.payload);
-        }
-      });
-      dispatch(fetchMessages(authHeader));
-    });
-  }, [authHeader, dispatch, navigate, rollbar, t]);
+    dispatch(fetchMessages(authHeader));
+  }, [authHeader, dispatch, isConnected, navigate, rollbar, t]);
 
   return (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">

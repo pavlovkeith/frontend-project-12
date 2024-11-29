@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import loginImage from '../assets/images/login.jpg';
 import { logIn } from '../store/slices/authSlice';
+import { ROUTES } from '../routes';
 
 const LoginPage = () => {
   const rollbar = useRollbar();
@@ -16,8 +17,6 @@ const LoginPage = () => {
   const { loadingStatus, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  console.log('login');
 
   useEffect(() => {
     inputRef.current.focus();
@@ -31,7 +30,7 @@ const LoginPage = () => {
     onSubmit: (values) => {
       dispatch(logIn(values)).then((data) => {
         if (!data.error) {
-          navigate('/');
+          navigate(ROUTES.home);
         } else {
           inputRef.current.select();
           if (data.payload !== 401) {

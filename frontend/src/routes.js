@@ -7,3 +7,10 @@ export default {
   messagesPath: () => [apiPath, 'messages'].join('/'),
   channelPath: (id) => [apiPath, 'channels', id].join('/'),
 };
+
+export const ROUTES = {
+  login: '/login',
+  signup: '/signup',
+  home: '/',
+  notfound: '*',
+};

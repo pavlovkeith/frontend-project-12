@@ -9,7 +9,7 @@ const Messages = () => {
   const { currentChannel } = useSelector((state) => state.channels);
 
   const messages = useSelector(messagesSelectors.selectAll)
-    .filter((message) => message.channelId === currentChannel.id);
+    .filter((message) => message.channelId === currentChannel?.id);
 
   useEffect(() => {
     if (messagesRef.current) {
