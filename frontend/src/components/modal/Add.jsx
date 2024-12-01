@@ -6,11 +6,10 @@ import { useRollbar } from '@rollbar/react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
-import { addChannel, selectors as channelsSelectors } from '../../store/slices/channelsSlice';
-import { getChannelValidationShema } from '../../validation';
+import { addChannel, selectors as channelsSelectors, actions as channelsActions } from '../../store/slices/channelsSlice';
+import * as yup from 'yup';
 
 filter.add(filter.getDictionary('ru'));
-export const getFilteredChanneName = (channelName) => filter.clean(channelName);
 
 const Add = ({ closeModal }) => {
   const rollbar = useRollbar();
@@ -28,15 +27,24 @@ const Add = ({ closeModal }) => {
     }
   }, [show]);
 
+  const validationSchema = yup.object({
+    name: yup.string()
+      .min(3, t('errors.nameLength'))
+      .max(20, t('errors.nameLength'))
+      .notOneOf(channelsNames, t('errors.nameExists')),
+  });
+
   const formik = useFormik({
     initialValues: { name: '' },
-    validationSchema: getChannelValidationShema(t, channelsNames),
+    validationSchema,
     onSubmit: (value) => {
-      const newChannel = { name: getFilteredChanneName(value.name.trim()) };
+      const newChannel = { name: filter.clean(value.name.trim()) };
       dispatch(addChannel({ newChannel, authHeader })).then((data) => {
-        closeModal();
         if (!data.error) {
           toast.success(t('toasts.channelCreated'));
+          const addedChannel = data.payload;
+          dispatch(channelsActions.setCurrentChannel(addedChannel.id));
+          closeModal();
         } else {
           toast.error(t('toasts.connectionError'));
           rollbar.error(data.error);
@@ -62,10 +70,7 @@ const Add = ({ closeModal }) => {
               name="name"
               id="name"
             />
-            <Form.Label
-              className="visually-hidden"
-              htmlFor="name"
-            >
+            <Form.Label className="visually-hidden" htmlFor="name">
               {t('placeholders.channelName')}
             </Form.Label>
             <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>
