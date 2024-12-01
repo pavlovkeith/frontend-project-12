@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useRollbar } from '@rollbar/react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -8,17 +8,18 @@ import { useFormik } from 'formik';
 import filter from 'leo-profanity';
 import { Form, InputGroup } from 'react-bootstrap';
 import sendButtonImg from '../assets/images/sendButton.svg';
-import { addMessage } from '../store/slices/messagesSlice';
+import { io } from 'socket.io-client';
 
 filter.add(filter.getDictionary('ru'));
 const getFilteredMessage = (message) => filter.clean(message);
 
+const socket = io();
+
 const MessageForm = () => {
   const rollbar = useRollbar();
   const inputRef = useRef();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { authHeader, username } = useSelector((state) => state.auth);
+  const { username } = useSelector((state) => state.auth);
   const { currentChannel } = useSelector((state) => state.channels);
   const { loadingStatus } = useSelector((state) => state.messages);
   const { type } = useSelector((state) => state.modal);
@@ -32,20 +33,21 @@ const MessageForm = () => {
   const formik = useFormik({
     initialValues: { body: '' },
     onSubmit: (value, { resetForm }) => {
-      const filtredMessage = getFilteredMessage(value.body.trim());
+      const filteredMessage = getFilteredMessage(value.body.trim());
       const newMessage = {
-        body: filtredMessage,
+        body: filteredMessage,
         channelId: currentChannel.id,
         username,
       };
-      dispatch(addMessage({ newMessage, authHeader })).then((data) => {
-        if (data.error) {
-          inputRef.current.select();
-          toast.error(t('toasts.connectionError'));
-          rollbar.error(data.error);
-        } else {
+
+      socket.emit('newMessage', newMessage, (response) => {
+        if (response.status === 'ok') {
           resetForm();
           inputRef.current.focus();
+        } else {
+          inputRef.current.select();
+          toast.error(t('toasts.connectionError'));
+          rollbar.error(response.error);
         }
       });
     },

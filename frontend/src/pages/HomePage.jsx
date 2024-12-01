@@ -23,16 +23,24 @@ const HomePage = () => {
   const { authHeader, isConnected } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(fetchChannels(authHeader)).then((data) => {
-      if (data?.error && data?.payload === 401) {
-        dispatch(logOut());
-        rollbar.error(data.payload);
-      } else if (data?.error) {
-        toast.error(t('toasts.connectionError'));
-        rollbar.error(data.payload);
-      }
-    });
-    dispatch(fetchMessages(authHeader));
+    if (authHeader) {
+      dispatch(fetchChannels(authHeader)).then((data) => {
+        if (data?.error && data?.payload === 401) {
+          dispatch(logOut());
+          rollbar.error(data.payload);
+          navigate('/login');
+        } else if (data?.error) {
+          toast.error(t('toasts.connectionError'));
+          rollbar.error(data.payload);
+        }
+      });
+      dispatch(fetchMessages(authHeader)).then((data) => {
+        if (data?.error) {
+          toast.error(t('toasts.connectionError'));
+          rollbar.error(data.payload);
+        }
+      });
+    }
   }, [authHeader, dispatch, isConnected, navigate, rollbar, t]);
 
   return (
@@ -41,17 +49,14 @@ const HomePage = () => {
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
           <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
             <b>{t('headers.channels')}</b>
-
             <button
-              onClick={() => dispatch(modalActions
-                .showModal({ type: 'adding', show: true, channel: {} }))}
+              onClick={() => dispatch(modalActions.showModal({ type: 'adding', show: true, channel: {} }))}
               type="button"
               className="p-0 text-primary btn btn-group-vertical shadow-none"
             >
               <img src={addButtonImg} alt={t('buttons.addChannel')} />
               <span className="visually-hidden">+</span>
             </button>
-
           </div>
           <Channels />
         </div>
