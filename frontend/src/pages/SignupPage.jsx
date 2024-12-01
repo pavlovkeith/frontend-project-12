@@ -4,7 +4,7 @@ import { useRollbar } from '@rollbar/react';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Добавляем Link
 import { useTranslation } from 'react-i18next';
 import signupImage from '../assets/images/signup.jpg';
 import { signUp } from '../store/slices/authSlice';
@@ -100,7 +100,10 @@ const SignupPage = () => {
                 >
                   {t('buttons.register')}
                 </Button>
-
+                <div className="text-center mt-3">
+                  <span>{t('questions.alreadyHaveAccount')}</span>
+                  <Link to={ROUTES.login} className="ms-2">{t('links.login')}</Link>
+                </div>
               </Form>
             </Card.Body>
           </Card>
