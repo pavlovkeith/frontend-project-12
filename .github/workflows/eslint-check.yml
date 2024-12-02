@@ -12,6 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install deps
-        run: cd frontend;npm ci
+        run: cd frontend && npm ci
       - name: Lint
-        run: npx eslint --ext js,jsx --no-eslintrc --config .eslintrc.yml .
+        run: cd frontend && npx eslint --ext js,jsx --no-eslintrc --config .eslintrc.yml .

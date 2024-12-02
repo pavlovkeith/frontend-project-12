@@ -18,7 +18,6 @@ import SignupPage from './pages/SignupPage';
 import { ROUTES } from './routes';
 
 const codeOfStarSymbol = 42;
-// const starSymbol = '*';
 
 const PrivateRoute = ({ children }) => {
   const { username } = useSelector((state) => state.auth);

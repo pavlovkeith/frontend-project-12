@@ -32,8 +32,6 @@ const Init = ({ children }) => {
   };
 
   const socket = io();
-
-  // Обработчики событий WebSocket
   socket.on('newChannel', (payload) => {
     dispatch(channelsActions.addChannel(payload));
   });
@@ -46,16 +44,10 @@ const Init = ({ children }) => {
   socket.on('removeChannel', (payload) => {
     dispatch(channelsActions.removeChannel(payload.id));
   });
-
-  // Обработка состояния соединения
   socket.on('connect', () => {
     dispatch(setConnectionStatus(true));
   });
   socket.on('disconnect', () => {
-    dispatch(setConnectionStatus(false));
-  });
-  socket.on('connect_error', (error) => {
-    console.error('WebSocket connection error:', error);
     dispatch(setConnectionStatus(false));
   });
 
