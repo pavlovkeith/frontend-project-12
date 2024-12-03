@@ -33,15 +33,16 @@ const Add = ({ closeModal }) => {
     validationSchema: getChannelValidationShema(t, channelsNames),
     onSubmit: (value) => {
       const newChannel = { name: getFilteredChanneName(value.name.trim()) };
-      dispatch(addChannel({ newChannel, authHeader })).then((data) => {
-        closeModal();
-        if (!data.error) {
-          toast.success(t('toasts.channelCreated'));
-        } else {
-          toast.error(t('toasts.connectionError'));
-          rollbar.error(data.error);
-        }
-      });
+      dispatch(addChannel({ newChannel, authHeader }))
+        .then((data) => {
+          closeModal();
+          if (!data.error) {
+            toast.success(t('toasts.channelCreated'));
+          } else {
+            toast.error(t('toasts.connectionError'));
+            rollbar.error(data.error);
+          }
+        });
     },
   });
 
@@ -62,10 +63,7 @@ const Add = ({ closeModal }) => {
               name="name"
               id="name"
             />
-            <Form.Label
-              className="visually-hidden"
-              htmlFor="name"
-            >
+            <Form.Label className="visually-hidden" htmlFor="name">
               {t('placeholders.channelName')}
             </Form.Label>
             <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
@@ -63,10 +63,7 @@ const Rename = ({ closeModal }) => {
               name="name"
               id="name"
             />
-            <Form.Label
-              className="visually-hidden"
-              htmlFor="name"
-            >
+            <Form.Label className="visually-hidden" htmlFor="name">
               {t('placeholders.channelName')}
             </Form.Label>
             <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>
