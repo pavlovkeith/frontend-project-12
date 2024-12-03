@@ -5,8 +5,6 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/0301064c69e66f05477b/maintainability)](https://codeclimate.com/github/pavlovkeith/frontend-project-12/maintainability)
 
 ## Описание проекта
-
-**"Чат"**
 Минималистичная версия Slack, с базовыми функциями, такими как регистрация пользователей, создание, удаление и переименование каналов.
 
 
@@ -21,9 +19,17 @@
 - **ESLint** — проверка качества кода.
 - **GitHub Actions** — автоматизация тестирования и сборки.
 
-## Hexlet Chat Скриншоты
-
+## Использование
+Используйте имеющийся аккаунт для проверки log: admin, pas: admin
 ![RSS Aggregator Screenshot](./frontend/public/screenshotForREADME1.png)
+
+Чтобы создать новый аккаунт кликните по сслыке регистрации внизу и создайте его
+![RSS Aggregator Screenshot](./frontend/public/screenshotForREADME2.png)
+
+Создавайте новые каналы и отправляйте в них сообщения
+![RSS Aggregator Screenshot](./frontend/public/screenshotForREADME3.png)
+
+![RSS Aggregator Screenshot](./frontend/public/screenshotForREADME4.png)
 
 
 ## Установка
@@ -60,4 +66,4 @@ http://0.0.0.0:5001/
 
 ## Проект также доступен по следующей ссылке:
 
-[Hexlet Chat на Render]((https://frontend-project-12-ua2d.onrender.com) - **Посетите развернутую версию проекта на Render**
+[Hexlet Chat на Render](https://frontend-project-12-ua2d.onrender.com) - **Посетите развернутую версию проекта на Render**
